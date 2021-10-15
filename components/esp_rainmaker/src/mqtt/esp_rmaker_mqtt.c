@@ -82,10 +82,10 @@ esp_err_t esp_rmaker_mqtt_unsubscribe(const char *topic)
     return ESP_OK;
 }
 
-esp_err_t esp_rmaker_mqtt_publish(const char *topic, void *data, size_t data_len, uint8_t qos, int *msg_id)
+esp_err_t esp_rmaker_mqtt_publish(const char *topic, void *data, size_t data_len, uint8_t qos, int *msg_id,int retain)
 {
     if (g_mqtt_config.publish) {
-        return g_mqtt_config.publish(topic, data, data_len, qos, msg_id);
+        return g_mqtt_config.publish(topic, data, data_len, qos, msg_id,retain);
     }
     ESP_LOGW(TAG, "esp_rmaker_mqtt_publish not registered");
     return ESP_OK;

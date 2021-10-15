@@ -62,7 +62,7 @@ esp_err_t esp_rmaker_mqtt_disconnect(void);
  * @return ESP_OK on success.
  * @return error in case of any error.
  */
-esp_err_t esp_rmaker_mqtt_publish(const char *topic, void *data, size_t data_len, uint8_t qos, int *msg_id);
+esp_err_t esp_rmaker_mqtt_publish(const char *topic, void *data, size_t data_len, uint8_t qos, int *msg_id,int retain);
 
 /** Subscribe to MQTT topic
  *
