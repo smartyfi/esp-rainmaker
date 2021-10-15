@@ -123,8 +123,8 @@ static void esp_rmaker_user_mapping_cb(void *priv_data)
     json_gen_end_object(&jstr);
     json_gen_str_end(&jstr);
     char publish_topic[100];
-    snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s", node_id, USER_MAPPING_TOPIC_SUFFIX);
-    esp_err_t err = esp_rmaker_mqtt_publish(publish_topic, publish_payload, strlen(publish_payload), RMAKER_MQTT_QOS1, &data->mqtt_msg_id);
+    snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s", node_id, USER_MAPPING_TOPIC_SUFFIX);
+    esp_err_t err = esp_rmaker_mqtt_publish(publish_topic, publish_payload, strlen(publish_payload), RMAKER_MQTT_QOS1, &data->mqtt_msg_id,0);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "MQTT Publish Error %d", err);
     }

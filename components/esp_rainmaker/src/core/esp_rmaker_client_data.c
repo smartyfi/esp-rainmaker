@@ -22,8 +22,8 @@
 #include "esp_rmaker_internal.h"
 #include "esp_rmaker_client_data.h"
 
-extern uint8_t mqtt_server_root_ca_pem_start[] asm("_binary_rmaker_mqtt_server_crt_start");
-extern uint8_t mqtt_server_root_ca_pem_end[] asm("_binary_rmaker_mqtt_server_crt_end");
+extern uint8_t mqtt_server_root_ca_pem_start[] asm("_binary_smartyfi_mqtt_server_crt_start");
+extern uint8_t mqtt_server_root_ca_pem_end[] asm("_binary_smartyfi_mqtt_server_crt_end");
 
 char * esp_rmaker_get_mqtt_host()
 {
@@ -34,6 +34,16 @@ char * esp_rmaker_get_mqtt_host()
     }
 #endif /* defined(CONFIG_ESP_RMAKER_SELF_CLAIM) || defined(CONFIG_ESP_RMAKER_ASSISTED_CLAIM) */
     return host;
+}
+
+char * esp_rmaker_get_mqtt_username()
+{
+    return esp_rmaker_factory_get(ESP_RMAKER_MQTT_USERNAME_NVS_KEY);
+}
+
+char * esp_rmaker_get_mqtt_password()
+{
+    return esp_rmaker_factory_get(ESP_RMAKER_MQTT_PASSWORD_NVS_KEY);
 }
 
 char * esp_rmaker_get_client_cert()
@@ -65,6 +75,9 @@ esp_rmaker_mqtt_conn_params_t *esp_rmaker_get_mqtt_conn_params()
     }
     mqtt_conn_params->server_cert = (char *)mqtt_server_root_ca_pem_start;
     mqtt_conn_params->client_id = esp_rmaker_get_node_id();
+    mqtt_conn_params->mqtt_username = esp_rmaker_get_mqtt_username();
+    mqtt_conn_params->mqtt_password = esp_rmaker_get_mqtt_password();
+    snprintf(mqtt_conn_params->lwt_topic, sizeof(mqtt_conn_params->lwt_topic), "channels/%s/messages/status", mqtt_conn_params->client_id);
     return mqtt_conn_params;
 init_err:
     if (mqtt_conn_params->mqtt_host) {

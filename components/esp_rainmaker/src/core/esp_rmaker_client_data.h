@@ -18,6 +18,8 @@
 #define ESP_RMAKER_CLIENT_CERT_NVS_KEY   "client_cert"
 #define ESP_RMAKER_CLIENT_KEY_NVS_KEY    "client_key"
 #define ESP_RMAKER_MQTT_HOST_NVS_KEY     "mqtt_host"
+#define ESP_RMAKER_MQTT_USERNAME_NVS_KEY "mqtt_username"
+#define ESP_RMAKER_MQTT_PASSWORD_NVS_KEY "mqtt_password"
 #define ESP_RMAKER_CLIENT_CSR_NVS_KEY    "csr"
 #define ESP_RMAKER_CLIENT_RANDOM_NVS_KEY "random"
 
@@ -25,5 +27,7 @@ char *esp_rmaker_get_client_cert();
 char *esp_rmaker_get_client_key();
 char *esp_rmaker_get_client_csr();
 char *esp_rmaker_get_mqtt_host();
+char *esp_rmaker_get_mqtt_username();
+char *esp_rmaker_get_mqtt_password();
 esp_rmaker_mqtt_conn_params_t *esp_rmaker_get_mqtt_conn_params();
 void esp_rmaker_clean_mqtt_conn_params(esp_rmaker_mqtt_conn_params_t *mqtt_conn_params);

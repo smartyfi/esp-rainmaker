@@ -223,18 +223,18 @@ static esp_err_t esp_rmaker_report_param_internal(uint8_t flags)
          */
         if (strlen(node_params_buf) > 10) {
             if (flags == RMAKER_PARAM_FLAG_VALUE_CHANGE) {
-                snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s",
+                snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s",
                         esp_rmaker_get_node_id(), NODE_PARAMS_LOCAL_TOPIC_SUFFIX);
                 ESP_LOGI(TAG, "Reporting params: %s", node_params_buf);
             } else if (flags == RMAKER_PARAM_FLAG_VALUE_NOTIFY) {
-                snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s",
+                snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s",
                         esp_rmaker_get_node_id(), NODE_PARAMS_ALERT_TOPIC_SUFFIX);
                 ESP_LOGI(TAG, "Notifying params: %s", node_params_buf);
             } else {
                 return ESP_FAIL;
             }
             if (esp_rmaker_params_mqtt_init_done) {
-                esp_rmaker_mqtt_publish(publish_topic, node_params_buf, strlen(node_params_buf), RMAKER_MQTT_QOS1, NULL);
+                esp_rmaker_mqtt_publish(publish_topic, node_params_buf, strlen(node_params_buf), RMAKER_MQTT_QOS1, NULL,1);
             } else {
                 ESP_LOGW(TAG, "Not reporting params since params mqtt not initialized yet.");
             }
@@ -252,11 +252,11 @@ esp_err_t esp_rmaker_report_node_state(void)
          * length as even the smallest possible data, Eg. '{"d":{"p":0}}' will be > 10 bytes.
          */
         if (strlen(node_params_buf) > 10) {
-            snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s",
+            snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s",
                     esp_rmaker_get_node_id(), NODE_PARAMS_LOCAL_INIT_TOPIC_SUFFIX);
             ESP_LOGI(TAG, "Reporting params (init): %s", node_params_buf);
             if (esp_rmaker_params_mqtt_init_done) {
-                esp_rmaker_mqtt_publish(publish_topic, node_params_buf, strlen(node_params_buf), RMAKER_MQTT_QOS1, NULL);
+                esp_rmaker_mqtt_publish(publish_topic, node_params_buf, strlen(node_params_buf), RMAKER_MQTT_QOS1, NULL,1);
             } else {
                 ESP_LOGW(TAG, "Not reporting params since params mqtt not initialized yet.");
             }
@@ -390,7 +390,7 @@ static void esp_rmaker_set_params_callback(const char *topic, void *payload, siz
 static esp_err_t esp_rmaker_register_for_set_params(void)
 {
     char subscribe_topic[100];
-    snprintf(subscribe_topic, sizeof(subscribe_topic), "node/%s/%s",
+    snprintf(subscribe_topic, sizeof(subscribe_topic), "channels/%s/messages/%s",
                 esp_rmaker_get_node_id(), NODE_PARAMS_REMOTE_TOPIC_SUFFIX);
     esp_err_t err = esp_rmaker_mqtt_subscribe(subscribe_topic, esp_rmaker_set_params_callback, RMAKER_MQTT_QOS1, NULL);
     if(err != ESP_OK) {
@@ -761,8 +761,8 @@ esp_err_t esp_rmaker_raise_alert(const char *alert_str)
     strlcpy(msg, alert_str, sizeof(msg));
     char buf[ESP_RMAKER_MAX_ALERT_LEN + RMAKER_ALERT_STR_MARGIN];
     snprintf(buf, sizeof(buf), "{\"%s\":\"%s\"}", ESP_RMAKER_ALERT_KEY, msg);
-    snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s",
+    snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s",
             esp_rmaker_get_node_id(), NODE_PARAMS_ALERT_TOPIC_SUFFIX);
     ESP_LOGI(TAG, "Reporting alert: %s", buf);
-    return esp_rmaker_mqtt_publish(publish_topic, buf, strlen(buf), RMAKER_MQTT_QOS1, NULL);
+    return esp_rmaker_mqtt_publish(publish_topic, buf, strlen(buf), RMAKER_MQTT_QOS1, NULL,0);
 }

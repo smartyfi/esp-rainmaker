@@ -60,9 +60,9 @@ esp_err_t esp_rmaker_ota_report_status_using_topics(esp_rmaker_ota_handle_t ota_
     json_gen_str_end(&jstr);
 
     char publish_topic[100];
-    snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s", node_id, OTASTATUS_TOPIC_SUFFIX);
+    snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s", node_id, OTASTATUS_TOPIC_SUFFIX);
     esp_err_t err = esp_rmaker_mqtt_publish(publish_topic, publish_payload, strlen(publish_payload),
-                        RMAKER_MQTT_QOS1, NULL);
+                        RMAKER_MQTT_QOS1, NULL,0);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_rmaker_mqtt_publish_data returned error %d",err);
         return ESP_FAIL;
@@ -186,9 +186,9 @@ static void esp_rmaker_ota_fetch(void *priv)
     json_gen_end_object(&jstr);
     json_gen_str_end(&jstr);
     char publish_topic[100];
-    snprintf(publish_topic, sizeof(publish_topic), "node/%s/%s", esp_rmaker_get_node_id(), OTAFETCH_TOPIC_SUFFIX);
+    snprintf(publish_topic, sizeof(publish_topic), "channels/%s/messages/%s", esp_rmaker_get_node_id(), OTAFETCH_TOPIC_SUFFIX);
     esp_err_t err = esp_rmaker_mqtt_publish(publish_topic, publish_payload, strlen(publish_payload),
-                        RMAKER_MQTT_QOS1, NULL);
+                        RMAKER_MQTT_QOS1, NULL,0);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "OTA Fetch Publish Error %d", err);
     }
@@ -199,7 +199,7 @@ static esp_err_t esp_rmaker_ota_subscribe(void *priv_data)
 {
     char subscribe_topic[100];
 
-    snprintf(subscribe_topic, sizeof(subscribe_topic),"node/%s/%s", esp_rmaker_get_node_id(), OTAURL_TOPIC_SUFFIX);
+    snprintf(subscribe_topic, sizeof(subscribe_topic),"channels/%s/messages/%s", esp_rmaker_get_node_id(), OTAURL_TOPIC_SUFFIX);
 
     ESP_LOGI(TAG, "Subscribing to: %s", subscribe_topic);
     /* First unsubscribe, in case there is a stale subscription */

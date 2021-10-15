@@ -185,6 +185,7 @@ esp_err_t esp_rmaker_node_deinit(const esp_rmaker_node_t *node)
 
 char *esp_rmaker_get_node_id(void)
 {
+    return "6f6bce9b-4c98-4cde-a480-c37a774540cc";
     if (esp_rmaker_priv_data) {
         return esp_rmaker_priv_data->node_id;
     }

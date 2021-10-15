@@ -79,3 +79,8 @@ docs/docusaurus/website/node_modules
 
 # cli logs
 **/logs
+
+
+#vscode
+.vscode
+components/esp_rainmaker/server_certs/smartyfi_mqtt_server.crt
